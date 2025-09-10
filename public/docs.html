@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prospector Docs - AI-Powered Advertising Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #374151;
+            background: #f8f9fa;
+            overflow-x: hidden;
+        }
+        
+        /* 종이질감 배경 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(0, 0, 0, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 40% 60%, rgba(0, 0, 0, 0.01) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        /* Koah 스타일 헤더 */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 8px 12px;
+            min-width: 300px;
+        }
+        
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            font-size: 14px;
+            color: #374151;
+        }
+        
+        .search-bar input::placeholder {
+            color: #9ca3af;
+        }
+        
+        .search-bar .search-icon {
+            margin-right: 8px;
+            color: #6b7280;
+        }
+        
+        .search-shortcut {
+            font-size: 12px;
+            color: #9ca3af;
+            background: #e5e7eb;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: #374151;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        
+        .nav-link:hover {
+            color: #111827;
+        }
+        
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        
+        .theme-toggle:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+        
+        /* Koah 스타일 메인 레이아웃 */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+            padding-top: 70px;
+        }
+        
+        .sidebar {
+            background: #ffffff;
+            border-right: 1px solid #e5e7eb;
+            padding: 24px 0;
+            overflow-y: auto;
+            height: calc(100vh - 70px);
+        }
+        
+        .main-content {
+            background: #ffffff;
+            padding: 0;
+            overflow-y: auto;
+            height: calc(100vh - 70px);
+        }
+        
+        /* 사이드바 스타일 */
+        .sidebar-section {
+            margin-bottom: 32px;
+        }
+        
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            padding: 0 24px;
+        }
+        
+        .sidebar-item {
+            display: block;
+            padding: 8px 24px;
+            color: #374151;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-item:hover {
+            background: #f9fafb;
+            color: #111827;
+        }
+        
+        .sidebar-item.active {
+            background: #f0f9ff;
+            color: #0369a1;
+            border-left-color: #0369a1;
+        }
+        
+        .sidebar-subitem {
+            padding-left: 40px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+        
+        .sidebar-subitem:hover {
+            color: #374151;
+        }
+        
+        /* 메인 콘텐츠 스타일 */
+        .content-wrapper {
+            padding: 40px;
+            max-width: 800px;
+        }
+        
+        .content-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        
+        .content-description {
+            font-size: 18px;
+            color: #6b7280;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+        
+        .info-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .info-icon {
+            color: #2563eb;
+            font-size: 16px;
+            margin-top: 2px;
+        }
+        
+        .info-text {
+            color: #1e40af;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #111827;
+            margin: 40px 0 16px 0;
+            line-height: 1.3;
+        }
+        
+        .section-content {
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        
+        .code-block {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #1e293b;
+            overflow-x: auto;
+        }
+        
+        .link {
+            color: #2563eb;
+            text-decoration: none;
+        }
+        
+        .link:hover {
+            text-decoration: underline;
+        }
+        
+        /* 섹션 제목 */
+        .section-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .section-description {
+            font-size: 16px;
+            color: #cccccc;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        /* 네비게이션 섹션 */
+        .nav-item {
+            font-size: 24px;
+            font-weight: 500;
+            color: #ffffff;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        
+        .nav-item:hover {
+            color: #666666;
+        }
+        
+        .nav-subitem {
+            font-size: 16px;
+            color: #cccccc;
+            margin-left: 20px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        
+        .nav-subitem:hover {
+            color: #ffffff;
+        }
+        
+        /* 문서 섹션 */
+        .doc-item {
+            margin-bottom: 40px;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+        
+        .doc-item:hover {
+            opacity: 0.8;
+        }
+        
+        .doc-category {
+            font-size: 12px;
+            color: #666666;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .doc-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #ffffff;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .doc-description {
+            font-size: 14px;
+            color: #cccccc;
+            line-height: 1.5;
+        }
+        
+        .doc-link {
+            font-size: 14px;
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            transition: color 0.2s ease;
+        }
+        
+        .doc-link:hover {
+            color: #666666;
+        }
+        
+        /* API 섹션 */
+        .api-item {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #333333;
+            border-radius: 0;
+            transition: all 0.2s ease;
+        }
+        
+        .api-item:hover {
+            border-color: #666666;
+        }
+        
+        .api-method {
+            font-size: 12px;
+            font-weight: 600;
+            color: #ffffff;
+            background: #333333;
+            padding: 4px 8px;
+            border-radius: 0;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+        
+        .api-endpoint {
+            font-size: 16px;
+            font-weight: 500;
+            color: #ffffff;
+            margin-bottom: 8px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .api-description {
+            font-size: 14px;
+            color: #cccccc;
+            line-height: 1.5;
+        }
+        
+        .api-link {
+            font-size: 14px;
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            transition: color 0.2s ease;
+        }
+        
+        .api-link:hover {
+            color: #666666;
+        }
+        
+        /* 반응형 디자인 */
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+            }
+            
+            .sidebar {
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            
+            .main-content {
+                height: auto;
+            }
+            
+            .search-bar {
+                min-width: 200px;
+            }
+            
+            .nav-links {
+                gap: 16px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 12px 16px;
+            }
+            
+            .search-bar {
+                min-width: 150px;
+            }
+            
+            .search-shortcut {
+                display: none;
+            }
+            
+            .nav-links {
+                gap: 12px;
+            }
+            
+            .nav-link {
+                font-size: 13px;
+            }
+            
+            .content-wrapper {
+                padding: 24px;
+            }
+            
+            .content-title {
+                font-size: 28px;
+            }
+            
+            .content-description {
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-actions {
+                gap: 8px;
+            }
+            
+            .search-bar {
+                min-width: 120px;
+            }
+            
+            .nav-links {
+                gap: 8px;
+            }
+            
+            .nav-link {
+                font-size: 12px;
+            }
+            
+            .content-wrapper {
+                padding: 16px;
+            }
+            
+            .content-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="logo"><a href="index.html" style="color: inherit; text-decoration: none;">Prospector</a></div>
+        <div class="header-actions">
+            <div class="search-bar">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                    <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <input type="text" placeholder="Find something..." id="searchInput">
+                <div class="search-shortcut">Ctrl K</div>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link">Guides</a>
+                <a href="#" class="nav-link">SDKs</a>
+                <a href="#" class="nav-link">Support</a>
+                <button class="theme-toggle">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 메인 레이아웃 -->
+    <div class="main-layout">
+        <!-- 사이드바 -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Guides</div>
+                <a href="#" class="sidebar-item">Introduction</a>
+                <a href="#" class="sidebar-item">Definitions</a>
+                <a href="#" class="sidebar-item">Ad formats</a>
+                <a href="#" class="sidebar-item">Content policy</a>
+                <a href="#" class="sidebar-item">FAQ</a>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">SDK</div>
+                <a href="#" class="sidebar-item">All SDKs</a>
+                <a href="#" class="sidebar-item active">JavaScript</a>
+                <a href="#" class="sidebar-item sidebar-subitem">Installation</a>
+                <a href="#" class="sidebar-item sidebar-subitem">Injecting ads</a>
+                <a href="#" class="sidebar-item">Experimentation</a>
+                <a href="#" class="sidebar-item">Custom styling</a>
+                <a href="#" class="sidebar-item">Multiple Formats</a>
+                <a href="#" class="sidebar-item">User-Targeted Homepage Ads</a>
+                <a href="#" class="sidebar-item">React</a>
+                <a href="#" class="sidebar-item">React Native</a>
+                <a href="#" class="sidebar-item">Flutter</a>
+                <a href="#" class="sidebar-item">iOS</a>
+                <a href="#" class="sidebar-item">Android</a>
+            </div>
+        </div>
+        
+        <!-- 메인 콘텐츠 -->
+        <div class="main-content">
+            <div class="content-wrapper">
+                <h1 class="content-title">JavaScript SDK</h1>
+                <p class="content-description">Prospector JavaScript SDK allows you to integrate AI-powered ads into your web application.</p>
+                
+                <div class="info-box">
+                    <div class="info-icon">ℹ</div>
+                    <div class="info-text">Before getting started, you'll need to create a publisher account in our dashboard and obtain a publisher ID.</div>
+                </div>
+                
+                <h2 class="section-title">Installation</h2>
+                <p class="section-content">
+                    Copy the snippet below and replace <code>&lt;YOUR_PUBLISHER_ID&gt;</code> within the <code>&lt;head&gt;</code> tags of your HTML file. 
+                    You can find your publisher ID in your <a href="#" class="link">dashboard settings</a>.
+                </p>
+                
+                <div class="code-block">
+&lt;script async src="https://app.prospector.ai/js?token=&lt;YOUR_PUBLISHER_ID&gt;"&gt;&lt;/script&gt;
+                </div>
+                
+                <h2 class="section-title">Injecting ads</h2>
+                <p class="section-content">
+                    There are two steps involved in serving Prospector ads: sending chat interaction data and specifying ad placement locations. 
+                    Our system analyzes user-AI conversations to deliver contextually relevant advertisements.
+                </p>
+                
+                <h3 class="section-title" style="font-size: 20px; margin: 32px 0 12px 0;">1. Send chat interaction data</h3>
+                <p class="section-content">
+                    You can use the <code>window.prospector.process</code> method to send chat interaction data to our system.
+                </p>
+                
+                <div class="code-block">
+window.prospector.process({
+    message: "User's message content",
+    context: "Additional context information"
+});
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 문서 내용 데이터
+        const documentContent = {
+            'introduction': {
+                title: 'Introduction',
+                description: 'Welcome to Prospector - the AI-powered advertising platform that revolutionizes how businesses reach their target audience.',
+                content: `
+                    <h2 class="section-title">What is Prospector?</h2>
+                    <p class="section-content">
+                        Prospector is an advanced AI-powered advertising platform that uses machine learning and contextual analysis 
+                        to deliver highly targeted advertisements. Our system analyzes user interactions, content context, and behavioral 
+                        patterns to ensure maximum relevance and engagement.
+                    </p>
+                    
+                    <h2 class="section-title">Key Features</h2>
+                    <ul style="color: #374151; line-height: 1.6; margin-bottom: 24px;">
+                        <li>AI-driven contextual targeting</li>
+                        <li>Real-time performance optimization</li>
+                        <li>Multi-platform SDK support</li>
+                        <li>Advanced analytics and reporting</li>
+                        <li>Seamless integration with existing systems</li>
+                    </ul>
+                    
+                    <h2 class="section-title">Getting Started</h2>
+                    <p class="section-content">
+                        To begin using Prospector, you'll need to create a publisher account and obtain your unique publisher ID. 
+                        This ID is used to authenticate your requests and track your advertising performance.
+                    </p>
+                `
+            },
+            'definitions': {
+                title: 'Definitions',
+                description: 'Important terms and concepts used throughout the Prospector platform.',
+                content: `
+                    <h2 class="section-title">Core Terms</h2>
+                    
+                    <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin: 24px 0 8px 0;">Publisher</h3>
+                    <p class="section-content">
+                        A publisher is any website, application, or platform that displays advertisements through the Prospector network.
+                    </p>
+                    
+                    <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin: 24px 0 8px 0;">Advertiser</h3>
+                    <p class="section-content">
+                        An advertiser is a business or individual who creates and manages advertising campaigns through Prospector.
+                    </p>
+                    
+                    <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin: 24px 0 8px 0;">Publisher ID</h3>
+                    <p class="section-content">
+                        A unique identifier assigned to each publisher account, used for authentication and tracking.
+                    </p>
+                    
+                    <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin: 24px 0 8px 0;">Contextual Targeting</h3>
+                    <p class="section-content">
+                        AI-powered method of displaying relevant advertisements based on content analysis and user behavior.
+                    </p>
+                    
+                    <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin: 24px 0 8px 0;">Impression</h3>
+                    <p class="section-content">
+                        A single display of an advertisement to a user.
+                    </p>
+                    
+                    <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin: 24px 0 8px 0;">Click-Through Rate (CTR)</h3>
+                    <p class="section-content">
+                        The percentage of users who click on an advertisement after seeing it.
+                    </p>
+                `
+            },
+            'ad-formats': {
+                title: 'Ad Formats',
+                description: 'Supported advertisement formats and their specifications.',
+                content: `
+                    <h2 class="section-title">Supported Ad Formats</h2>
+                    
+                    <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin: 24px 0 8px 0;">Display Ads</h3>
+                    <p class="section-content">
+                        Traditional banner advertisements in various sizes (728x90, 300x250, 160x600, etc.)
+                    </p>
+                    
+                    <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin: 24px 0 8px 0;">Native Ads</h3>
+                    <p class="section-content">
+                        Advertisements that match the look and feel of the surrounding content for seamless integration.
+                    </p>
+                    
+                    <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin: 24px 0 8px 0;">Video Ads</h3>
+                    <p class="section-content">
+                        Video advertisements with support for pre-roll, mid-roll, and post-roll placements.
+                    </p>
+                    
+                    <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin: 24px 0 8px 0;">Interactive Ads</h3>
+                    <p class="section-content">
+                        Rich media advertisements with interactive elements and animations.
+                    </p>
+                    
+                    <h2 class="section-title">Ad Specifications</h2>
+                    <div class="code-block">
+// Display Ad Sizes
+const adSizes = {
+    leaderboard: '728x90',
+    mediumRectangle: '300x250',
+    wideSkyscraper: '160x600',
+    mobileBanner: '320x50'
+};
+                    </div>
+                `
+            },
+            'content-policy': {
+                title: 'Content Policy',
+                description: 'Guidelines and restrictions for advertising content.',
+                content: `
+                    <h2 class="section-title">Content Guidelines</h2>
+                    
+                    <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin: 24px 0 8px 0;">Prohibited Content</h3>
+                    <ul style="color: #374151; line-height: 1.6; margin-bottom: 24px;">
+                        <li>Adult content or explicit material</li>
+                        <li>Violence or graphic content</li>
+                        <li>Hate speech or discriminatory content</li>
+                        <li>Illegal activities or substances</li>
+                        <li>Misleading or deceptive claims</li>
+                        <li>Copyright infringement</li>
+                    </ul>
+                    
+                    <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin: 24px 0 8px 0;">Content Requirements</h3>
+                    <ul style="color: #374151; line-height: 1.6; margin-bottom: 24px;">
+                        <li>Clear and accurate product descriptions</li>
+                        <li>Appropriate language and imagery</li>
+                        <li>Compliance with local advertising laws</li>
+                        <li>Respect for user privacy</li>
+                    </ul>
+                    
+                    <h2 class="section-title">Review Process</h2>
+                    <p class="section-content">
+                        All advertisements are automatically reviewed by our AI system and may undergo manual review 
+                        for compliance with our content policy. Non-compliant content will be rejected or removed.
+                    </p>
+                `
+            },
+            'faq': {
+                title: 'FAQ',
+                description: 'Frequently asked questions about Prospector.',
+                content: `
+                    <h2 class="section-title">Frequently Asked Questions</h2>
+                    
+                    <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin: 24px 0 8px 0;">How do I get started with Prospector?</h3>
+                    <p class="section-content">
+                        Sign up for a publisher account, obtain your publisher ID, and integrate our SDK into your application. 
+                        The process typically takes less than 10 minutes.
+                    </p>
+                    
+                    <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin: 24px 0 8px 0;">What platforms are supported?</h3>
+                    <p class="section-content">
+                        We support web (JavaScript), mobile (iOS, Android), and various frameworks including React, React Native, and Flutter.
+                    </p>
+                    
+                    <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin: 24px 0 8px 0;">How does contextual targeting work?</h3>
+                    <p class="section-content">
+                        Our AI analyzes page content, user behavior, and contextual signals to display the most relevant advertisements.
+                    </p>
+                    
+                    <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin: 24px 0 8px 0;">What are the payment terms?</h3>
+                    <p class="section-content">
+                        Publishers are paid monthly based on impressions and clicks. Minimum payout is $50.
+                    </p>
+                    
+                    <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin: 24px 0 8px 0;">Is there a support team?</h3>
+                    <p class="section-content">
+                        Yes, we provide 24/7 support via email and live chat for all publishers.
+                    </p>
+                `
+            },
+            'installation': {
+                title: 'Installation',
+                description: 'Step-by-step guide to installing Prospector JavaScript SDK.',
+                content: `
+                    <h2 class="section-title">Installation</h2>
+                    <p class="section-content">
+                        Copy the snippet below and replace <code>&lt;YOUR_PUBLISHER_ID&gt;</code> within the <code>&lt;head&gt;</code> tags of your HTML file. 
+                        You can find your publisher ID in your <a href="#" class="link">dashboard settings</a>.
+                    </p>
+                    
+                    <div class="code-block">
+&lt;script async src="https://app.prospector.ai/js?token=&lt;YOUR_PUBLISHER_ID&gt;"&gt;&lt;/script&gt;
+                    </div>
+                    
+                    <h2 class="section-title">NPM Installation</h2>
+                    <p class="section-content">
+                        For Node.js projects, you can install the SDK via npm:
+                    </p>
+                    
+                    <div class="code-block">
+npm install @prospector/sdk
+                    </div>
+                    
+                    <h2 class="section-title">CDN Installation</h2>
+                    <p class="section-content">
+                        Alternatively, you can use our CDN for faster loading:
+                    </p>
+                    
+                    <div class="code-block">
+&lt;script src="https://cdn.prospector.ai/sdk/latest/prospector.min.js"&gt;&lt;/script&gt;
+                    </div>
+                    
+                    <h2 class="section-title">Verification</h2>
+                    <p class="section-content">
+                        After installation, verify that the SDK is loaded correctly by checking the browser console for initialization messages.
+                    </p>
+                `
+            },
+            'injecting-ads': {
+                title: 'Injecting Ads',
+                description: 'How to inject and display advertisements in your application.',
+                content: `
+                    <h2 class="section-title">Injecting ads</h2>
+                    <p class="section-content">
+                        There are two steps involved in serving Prospector ads: sending chat interaction data and specifying ad placement locations. 
+                        Our system analyzes user-AI conversations to deliver contextually relevant advertisements.
+                    </p>
+                    
+                    <h3 style="font-size: 20px; font-weight: 600; color: #111827; margin: 32px 0 12px 0;">1. Send chat interaction data</h3>
+                    <p class="section-content">
+                        You can use the <code>window.prospector.process</code> method to send chat interaction data to our system.
+                    </p>
+                    
+                    <div class="code-block">
+window.prospector.process({
+    message: "User's message content",
+    context: "Additional context information"
+});
+                    </div>
+                    
+                    <h3 style="font-size: 20px; font-weight: 600; color: #111827; margin: 32px 0 12px 0;">2. Specify ad placement</h3>
+                    <p class="section-content">
+                        Define where advertisements should appear in your application:
+                    </p>
+                    
+                    <div class="code-block">
+// Create ad container
+const adContainer = document.createElement('div');
+adContainer.id = 'prospector-ad';
+document.body.appendChild(adContainer);
+
+// Initialize ad
+window.prospector.init({
+    containerId: 'prospector-ad',
+    format: 'banner',
+    size: '300x250'
+});
+                    </div>
+                    
+                    <h3 style="font-size: 20px; font-weight: 600; color: #111827; margin: 32px 0 12px 0;">3. Handle ad events</h3>
+                    <p class="section-content">
+                        Listen for ad events to track performance and handle user interactions:
+                    </p>
+                    
+                    <div class="code-block">
+window.prospector.on('adLoaded', (ad) => {
+    console.log('Ad loaded:', ad);
+});
+
+window.prospector.on('adClicked', (ad) => {
+    console.log('Ad clicked:', ad);
+});
+                    </div>
+                `
+            },
+            'experimentation': {
+                title: 'Experimentation',
+                description: 'A/B testing and experimentation features for optimizing ad performance.',
+                content: `
+                    <h2 class="section-title">A/B Testing</h2>
+                    <p class="section-content">
+                        Prospector provides built-in A/B testing capabilities to help you optimize your advertising strategy. 
+                        Test different ad formats, placements, and targeting options to maximize performance.
+                    </p>
+                    
+                    <h2 class="section-title">Setting Up Experiments</h2>
+                    <div class="code-block">
+// Create an experiment
+const experiment = window.prospector.createExperiment({
+    name: 'Ad Format Test',
+    variants: [
+        { name: 'Banner', format: 'banner', size: '728x90' },
+        { name: 'Native', format: 'native', size: '300x250' }
+    ],
+    trafficSplit: 0.5 // 50/50 split
+});
+
+// Start the experiment
+experiment.start();
+                    </div>
+                    
+                    <h2 class="section-title">Analyzing Results</h2>
+                    <p class="section-content">
+                        Monitor experiment performance through the dashboard and analyze key metrics like CTR, conversion rates, and revenue.
+                    </p>
+                `
+            },
+            'custom-styling': {
+                title: 'Custom Styling',
+                description: 'Customizing the appearance of advertisements to match your brand.',
+                content: `
+                    <h2 class="section-title">Custom Styling</h2>
+                    <p class="section-content">
+                        Customize the appearance of advertisements to match your website's design and branding. 
+                        Prospector provides flexible styling options for seamless integration.
+                    </p>
+                    
+                    <h2 class="section-title">CSS Customization</h2>
+                    <div class="code-block">
+// Custom CSS for ad containers
+.prospector-ad {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin: 16px 0;
+}
+
+.prospector-ad .ad-title {
+    font-family: 'Your Brand Font', sans-serif;
+    color: #your-brand-color;
+}
+                    </div>
+                    
+                    <h2 class="section-title">Theme Configuration</h2>
+                    <div class="code-block">
+window.prospector.configure({
+    theme: {
+        primaryColor: '#your-brand-color',
+        fontFamily: 'Your Brand Font',
+        borderRadius: '8px'
+    }
+});
+                    </div>
+                `
+            },
+            'multiple-formats': {
+                title: 'Multiple Formats',
+                description: 'Supporting multiple ad formats simultaneously.',
+                content: `
+                    <h2 class="section-title">Multiple Ad Formats</h2>
+                    <p class="section-content">
+                        Display different ad formats on the same page to maximize revenue and user engagement. 
+                        Prospector automatically selects the best performing format for each placement.
+                    </p>
+                    
+                    <h2 class="section-title">Format Priority</h2>
+                    <div class="code-block">
+window.prospector.configure({
+    formats: [
+        { type: 'video', priority: 1 },
+        { type: 'native', priority: 2 },
+        { type: 'banner', priority: 3 }
+    ]
+});
+                    </div>
+                    
+                    <h2 class="section-title">Responsive Formats</h2>
+                    <p class="section-content">
+                        Automatically adjust ad formats based on device type and screen size for optimal user experience.
+                    </p>
+                `
+            },
+            'user-targeted-homepage-ads': {
+                title: 'User-Targeted Homepage Ads',
+                description: 'Specialized targeting for homepage advertisements.',
+                content: `
+                    <h2 class="section-title">Homepage Targeting</h2>
+                    <p class="section-content">
+                        Specialized targeting strategies for homepage advertisements that maximize user engagement and conversion rates.
+                    </p>
+                    
+                    <h2 class="section-title">User Behavior Analysis</h2>
+                    <p class="section-content">
+                        Analyze user behavior patterns to deliver personalized advertisements on your homepage based on:
+                    </p>
+                    <ul style="color: #374151; line-height: 1.6; margin-bottom: 24px;">
+                        <li>Previous page visits</li>
+                        <li>Search history</li>
+                        <li>Time spent on site</li>
+                        <li>Device and location data</li>
+                    </ul>
+                    
+                    <h2 class="section-title">Implementation</h2>
+                    <div class="code-block">
+// Homepage-specific ad configuration
+window.prospector.init({
+    placement: 'homepage',
+    targeting: {
+        userBehavior: true,
+        contextualAnalysis: true,
+        personalization: true
+    }
+});
+                    </div>
+                `
+            },
+            'react': {
+                title: 'React Integration',
+                description: 'Integrating Prospector with React applications.',
+                content: `
+                    <h2 class="section-title">React SDK</h2>
+                    <p class="section-content">
+                        Seamlessly integrate Prospector advertisements into your React applications with our dedicated React SDK.
+                    </p>
+                    
+                    <h2 class="section-title">Installation</h2>
+                    <div class="code-block">
+npm install @prospector/react
+                    </div>
+                    
+                    <h2 class="section-title">Basic Usage</h2>
+                    <div class="code-block">
+import { ProspectorAd } from '@prospector/react';
+
+function App() {
+    return (
+        &lt;div&gt;
+            &lt;ProspectorAd 
+                publisherId="your-publisher-id"
+                format="banner"
+                size="300x250"
+            /&gt;
+        &lt;/div&gt;
+    );
+}
+                    </div>
+                    
+                    <h2 class="section-title">Advanced Configuration</h2>
+                    <div class="code-block">
+import { ProspectorProvider } from '@prospector/react';
+
+function App() {
+    return (
+        &lt;ProspectorProvider publisherId="your-publisher-id"&gt;
+            &lt;YourApp /&gt;
+        &lt;/ProspectorProvider&gt;
+    );
+}
+                    </div>
+                `
+            },
+            'react-native': {
+                title: 'React Native Integration',
+                description: 'Integrating Prospector with React Native mobile applications.',
+                content: `
+                    <h2 class="section-title">React Native SDK</h2>
+                    <p class="section-content">
+                        Native integration for React Native applications with optimized performance for mobile devices.
+                    </p>
+                    
+                    <h2 class="section-title">Installation</h2>
+                    <div class="code-block">
+npm install @prospector/react-native
+                    </div>
+                    
+                    <h2 class="section-title">iOS Setup</h2>
+                    <div class="code-block">
+cd ios && pod install
+                    </div>
+                    
+                    <h2 class="section-title">Android Setup</h2>
+                    <p class="section-content">
+                        Add the following to your android/app/build.gradle:
+                    </p>
+                    <div class="code-block">
+dependencies {
+    implementation 'com.prospector:sdk:latest'
+}
+                    </div>
+                    
+                    <h2 class="section-title">Usage</h2>
+                    <div class="code-block">
+import { ProspectorAd } from '@prospector/react-native';
+
+function App() {
+    return (
+        &lt;View&gt;
+            &lt;ProspectorAd 
+                publisherId="your-publisher-id"
+                format="banner"
+                size="320x50"
+            /&gt;
+        &lt;/View&gt;
+    );
+}
+                    </div>
+                `
+            },
+            'flutter': {
+                title: 'Flutter Integration',
+                description: 'Integrating Prospector with Flutter applications.',
+                content: `
+                    <h2 class="section-title">Flutter SDK</h2>
+                    <p class="section-content">
+                        Cross-platform integration for Flutter applications supporting both iOS and Android.
+                    </p>
+                    
+                    <h2 class="section-title">Installation</h2>
+                    <p class="section-content">
+                        Add to your pubspec.yaml:
+                    </p>
+                    <div class="code-block">
+dependencies:
+  prospector_sdk: ^1.0.0
+                    </div>
+                    
+                    <h2 class="section-title">Usage</h2>
+                    <div class="code-block">
+import 'package:prospector_sdk/prospector_sdk.dart';
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: ProspectorAd(
+          publisherId: 'your-publisher-id',
+          format: 'banner',
+          size: '320x50',
+        ),
+      ),
+    );
+  }
+}
+                    </div>
+                `
+            },
+            'ios': {
+                title: 'iOS SDK',
+                description: 'Native iOS integration for Prospector advertisements.',
+                content: `
+                    <h2 class="section-title">iOS SDK</h2>
+                    <p class="section-content">
+                        Native iOS SDK for optimal performance and integration with iOS applications.
+                    </p>
+                    
+                    <h2 class="section-title">Installation via CocoaPods</h2>
+                    <div class="code-block">
+pod 'ProspectorSDK'
+                    </div>
+                    
+                    <h2 class="section-title">Swift Integration</h2>
+                    <div class="code-block">
+import ProspectorSDK
+
+class ViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let adView = ProspectorAdView(
+            publisherId: "your-publisher-id",
+            format: .banner,
+            size: CGSize(width: 320, height: 50)
+        )
+        
+        view.addSubview(adView)
+    }
+}
+                    </div>
+                    
+                    <h2 class="section-title">Objective-C Integration</h2>
+                    <div class="code-block">
+#import &lt;ProspectorSDK/ProspectorSDK.h&gt;
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    ProspectorAdView *adView = [[ProspectorAdView alloc] 
+        initWithPublisherId:@"your-publisher-id"
+        format:ProspectorAdFormatBanner
+        size:CGSizeMake(320, 50)];
+    
+    [self.view addSubview:adView];
+}
+                    </div>
+                `
+            },
+            'android': {
+                title: 'Android SDK',
+                description: 'Native Android integration for Prospector advertisements.',
+                content: `
+                    <h2 class="section-title">Android SDK</h2>
+                    <p class="section-content">
+                        Native Android SDK for optimal performance and integration with Android applications.
+                    </p>
+                    
+                    <h2 class="section-title">Gradle Integration</h2>
+                    <div class="code-block">
+dependencies {
+    implementation 'com.prospector:sdk:1.0.0'
+}
+                    </div>
+                    
+                    <h2 class="section-title">Java Integration</h2>
+                    <div class="code-block">
+import com.prospector.sdk.ProspectorAdView;
+
+public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        
+        ProspectorAdView adView = new ProspectorAdView(this);
+        adView.setPublisherId("your-publisher-id");
+        adView.setFormat(ProspectorAdFormat.BANNER);
+        adView.setSize(320, 50);
+        
+        LinearLayout layout = findViewById(R.id.layout);
+        layout.addView(adView);
+    }
+}
+                    </div>
+                    
+                    <h2 class="section-title">Kotlin Integration</h2>
+                    <div class="code-block">
+import com.prospector.sdk.ProspectorAdView
+
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        
+        val adView = ProspectorAdView(this).apply {
+            publisherId = "your-publisher-id"
+            format = ProspectorAdFormat.BANNER
+            size = Pair(320, 50)
+        }
+        
+        findViewById&lt;LinearLayout&gt;(R.id.layout).addView(adView)
+    }
+}
+                    </div>
+                `
+            }
+        };
+
+        // Koah 스타일 인터랙션
+        document.addEventListener('DOMContentLoaded', function() {
+            // 사이드바 아이템 클릭 이벤트
+            const sidebarItems = document.querySelectorAll('.sidebar-item');
+            sidebarItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 모든 아이템에서 active 클래스 제거
+                    sidebarItems.forEach(i => i.classList.remove('active'));
+                    
+                    // 클릭된 아이템에 active 클래스 추가
+                    this.classList.add('active');
+                    
+                    // 문서 내용 업데이트
+                    const itemText = this.textContent.trim().toLowerCase();
+                    const itemKey = itemText.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                    
+                    if (documentContent[itemKey]) {
+                        updateContent(documentContent[itemKey]);
+                    }
+                    
+                    console.log('Sidebar item clicked:', this.textContent);
+                });
+            });
+            
+            // 검색 기능
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const query = this.value.toLowerCase();
+                    console.log('Search query:', query);
+                    
+                    // 실제 검색 로직은 여기에 구현
+                    if (query.length > 2) {
+                        // 검색 결과 표시 로직
+                    }
+                });
+                
+                // Ctrl+K 단축키
+                document.addEventListener('keydown', function(e) {
+                    if (e.ctrlKey && e.key === 'k') {
+                        e.preventDefault();
+                        searchInput.focus();
+                    }
+                });
+            }
+            
+            // 테마 토글
+            const themeToggle = document.querySelector('.theme-toggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function() {
+                    console.log('Theme toggle clicked');
+                    // 테마 변경 로직은 여기에 구현
+                });
+            }
+            
+            // 네비게이션 링크
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Navigation link clicked:', this.textContent);
+                });
+            });
+            
+            // 문서 내용 업데이트 함수
+            function updateContent(content) {
+                const contentWrapper = document.querySelector('.content-wrapper');
+                if (contentWrapper) {
+                    contentWrapper.innerHTML = `
+                        <h1 class="content-title">${content.title}</h1>
+                        <p class="content-description">${content.description}</p>
+                        ${content.content}
+                    `;
+                }
+            }
+            
+            // 초기 로드 시 JavaScript SDK 내용 표시
+            updateContent(documentContent['installation']);
+        });
+    </script>
+</body>
+</html>

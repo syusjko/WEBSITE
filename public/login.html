@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdvisoryAugust - 로그인</title>
+    <meta name="description" content="AdvisoryAugust 대시보드 로그인">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl);
+            padding: var(--space-16);
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: var(--space-16);
+        }
+        
+        .login-logo {
+            font-size: var(--text-3xl);
+            font-weight: var(--font-weight-bold);
+            color: #ffffff;
+            margin-bottom: var(--space-4);
+        }
+        
+        .login-subtitle {
+            color: #e2e8f0;
+            font-size: var(--text-sm);
+        }
+        
+        .form-group {
+            margin-bottom: var(--space-6);
+        }
+        
+        .form-label {
+            display: block;
+            color: #e2e8f0;
+            font-size: var(--text-sm);
+            font-weight: var(--font-weight-medium);
+            margin-bottom: var(--space-2);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: var(--space-4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-lg);
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: var(--text-base);
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .login-button {
+            width: 100%;
+            padding: var(--space-4);
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: var(--text-base);
+            font-weight: var(--font-weight-medium);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: var(--space-6);
+        }
+        
+        .login-button:hover {
+            background: var(--primary-blue-dark);
+            transform: translateY(-1px);
+        }
+        
+        .login-button:disabled {
+            background: rgba(255, 255, 255, 0.2);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: var(--text-sm);
+            margin-top: var(--space-2);
+            display: none;
+        }
+        
+        .back-to-home {
+            text-align: center;
+        }
+        
+        .back-to-home a {
+            color: #e2e8f0;
+            text-decoration: none;
+            font-size: var(--text-sm);
+            transition: color 0.3s ease;
+        }
+        
+        .back-to-home a:hover {
+            color: var(--primary-blue);
+        }
+        
+        .security-notice {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+        
+        .security-notice-text {
+            color: #22c55e;
+            font-size: var(--text-sm);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="login-logo">AdvisoryAugust</div>
+            <div class="login-subtitle">대시보드 로그인</div>
+        </div>
+        
+        <div class="security-notice">
+            <div class="security-notice-text">
+                🔒 초대 전용 시스템 - 보안이 강화된 로그인
+            </div>
+        </div>
+        
+        <form id="loginForm" class="login-form">
+            <div class="form-group">
+                <label for="email" class="form-label">이메일</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    class="form-input" 
+                    placeholder="your@email.com"
+                    required
+                    autocomplete="email"
+                >
+                <div class="error-message" id="emailError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password" class="form-label">비밀번호</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    class="form-input" 
+                    placeholder="비밀번호를 입력하세요"
+                    required
+                    autocomplete="current-password"
+                >
+                <div class="error-message" id="passwordError"></div>
+            </div>
+            
+            <button type="submit" class="login-button" id="loginButton">
+                로그인
+            </button>
+            
+            <div class="error-message" id="generalError"></div>
+        </form>
+        
+        <div class="back-to-home">
+            <a href="index.html">← 메인 페이지로 돌아가기</a>
+        </div>
+    </div>
+    
+    <script src="js/auth.js"></script>
+</body>
+</html>
