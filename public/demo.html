@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prospector Analytics Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        
+        /* 헤더 */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px 24px;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #10b981;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        
+        .btn-login {
+            background: #10b981;
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-login:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+        
+        /* 메인 콘텐츠 */
+        .main-content {
+            padding-top: 100px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 24px 60px;
+            text-align: center;
+        }
+        
+        .demo-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 24px;
+            line-height: 1.1;
+        }
+        
+        .demo-subtitle {
+            font-size: 20px;
+            color: #9ca3af;
+            max-width: 600px;
+            margin: 0 auto 60px;
+            line-height: 1.5;
+        }
+        
+        /* 데모 대시보드 */
+        .demo-dashboard {
+            background: #1a1a1a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            margin-bottom: 60px;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .dashboard-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        
+        .dashboard-status {
+            background: #10b981;
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: #0a0a0a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .chart-placeholder {
+            background: #0a0a0a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            font-size: 16px;
+        }
+        
+        /* 액션 버튼들 */
+        .demo-actions {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-demo {
+            background: #374151;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-demo:hover {
+            background: #4b5563;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-primary-demo {
+            background: #10b981;
+            color: #ffffff;
+            border: 2px solid #10b981;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary-demo:hover {
+            background: #059669;
+            border-color: #059669;
+            transform: translateY(-2px);
+        }
+        
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            .demo-title {
+                font-size: 36px;
+            }
+            
+            .demo-subtitle {
+                font-size: 18px;
+            }
+            
+            .demo-dashboard {
+                padding: 24px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 16px;
+            }
+            
+            .demo-actions {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .demo-title {
+                font-size: 28px;
+            }
+            
+            .demo-subtitle {
+                font-size: 16px;
+            }
+            
+            .stat-value {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">P</div>
+                Prospector
+            </a>
+            
+            <a href="login.html" class="btn-login">Sign In</a>
+        </div>
+    </header>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="main-content">
+        <h1 class="demo-title">Analytics Dashboard Demo</h1>
+        <p class="demo-subtitle">
+            Experience the power of Prospector's AI-driven advertising analytics platform. 
+            This demo showcases real-time insights and performance metrics.
+        </p>
+        
+        <!-- 데모 대시보드 -->
+        <div class="demo-dashboard">
+            <div class="dashboard-header">
+                <h2 class="dashboard-title">Campaign Performance</h2>
+                <div class="dashboard-status">Live Demo</div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">1.2M</div>
+                    <div class="stat-label">Impressions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">45.6K</div>
+                    <div class="stat-label">Clicks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">3.8%</div>
+                    <div class="stat-label">CTR</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$12.4K</div>
+                    <div class="stat-label">Revenue</div>
+                </div>
+            </div>
+            
+            <div class="chart-placeholder">
+                📊 Interactive Analytics Chart (Demo Mode)
+            </div>
+        </div>
+        
+        <!-- 액션 버튼들 -->
+        <div class="demo-actions">
+            <button class="btn-demo" onclick="alert('More demo features coming soon!')">Explore Features</button>
+            <a href="login.html" class="btn-primary-demo">Get Full Access</a>
+        </div>
+    </main>
+
+    <script>
+        // 데모 데이터 업데이트 시뮬레이션
+        document.addEventListener('DOMContentLoaded', function() {
+            const statValues = document.querySelectorAll('.stat-value');
+            
+            // 3초마다 숫자 업데이트 시뮬레이션
+            setInterval(() => {
+                statValues.forEach(stat => {
+                    const currentValue = stat.textContent;
+                    const isPercentage = currentValue.includes('%');
+                    const isCurrency = currentValue.includes('$');
+                    const isK = currentValue.includes('K');
+                    const isM = currentValue.includes('M');
+                    
+                    if (isM) {
+                        const baseNum = parseFloat(currentValue.replace('M', ''));
+                        const newNum = (baseNum + (Math.random() - 0.5) * 0.1).toFixed(1);
+                        stat.textContent = newNum + 'M';
+                    } else if (isK) {
+                        const baseNum = parseFloat(currentValue.replace('K', ''));
+                        const newNum = Math.round(baseNum + (Math.random() - 0.5) * 100);
+                        stat.textContent = newNum + 'K';
+                    } else if (isPercentage) {
+                        const baseNum = parseFloat(currentValue.replace('%', ''));
+                        const newNum = (baseNum + (Math.random() - 0.5) * 0.5).toFixed(1);
+                        stat.textContent = newNum + '%';
+                    } else if (isCurrency) {
+                        const baseNum = parseFloat(currentValue.replace('$', '').replace('K', ''));
+                        const newNum = (baseNum + (Math.random() - 0.5) * 2).toFixed(1);
+                        stat.textContent = '$' + newNum + 'K';
+                    }
+                });
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
