@@ -10,3 +10,7 @@ services:
         value: production
       - key: PORT
         value: 3000
+      - key: ADVISOR_API_URL
+        value: https://www.advisorapi.io
+      - key: ADVISOR_API_KEY
+        sync: false  # 실제 API 키는 Render 대시보드에서 설정

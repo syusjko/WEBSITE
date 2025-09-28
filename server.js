@@ -10,6 +10,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'advisory_august_secret_key_2024';
 
+// Advisor API 설정
+const ADVISOR_API_URL = process.env.ADVISOR_API_URL || 'https://www.advisorapi.io';
+const ADVISOR_API_KEY = process.env.ADVISOR_API_KEY;
+
 // 미들웨어 설정
 app.use(cors());
 app.use(express.json());
@@ -138,6 +142,45 @@ const getClientIP = (req) => {
 };
 
 // API 라우트들
+
+// Advisor API 연동 엔드포인트
+app.post('/api/advisor/analyze', async (req, res) => {
+  try {
+    if (!ADVISOR_API_KEY) {
+      return res.status(500).json({ 
+        error: 'Advisor API 키가 설정되지 않았습니다.' 
+      });
+    }
+
+    const { conversation, context } = req.body;
+    
+    const response = await fetch(`${ADVISOR_API_URL}/api/analyze`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${ADVISOR_API_KEY}`
+      },
+      body: JSON.stringify({
+        conversation,
+        context,
+        timestamp: new Date().toISOString()
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Advisor API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('Advisor API error:', error);
+    res.status(500).json({ 
+      error: 'Advisor API 연동 중 오류가 발생했습니다.',
+      details: error.message 
+    });
+  }
+});
 
 // 로그인 - 비활성화 (프리뷰용)
 app.post('/api/auth/login', (req, res) => {
