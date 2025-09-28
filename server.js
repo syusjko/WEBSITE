@@ -139,79 +139,11 @@ const getClientIP = (req) => {
 
 // API 라우트들
 
-// 로그인
-app.post('/api/auth/login', loginLimiter, (req, res) => {
-  const { email, password } = req.body;
-  const clientIP = getClientIP(req);
-
-  if (!email || !password) {
-    return res.status(400).json({ error: '이메일과 비밀번호를 입력해주세요.' });
-  }
-
-  // 이메일 형식 검증
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    return res.status(400).json({ error: '올바른 이메일 형식을 입력해주세요.' });
-  }
-
-  // 비밀번호 길이 검증
-  if (password.length < 8) {
-    return res.status(400).json({ error: '비밀번호는 최소 8자 이상이어야 합니다.' });
-  }
-
-  // 사용자 조회
-  db.get('SELECT * FROM users WHERE email = ? AND is_active = 1', [email], (err, user) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ error: '서버 오류가 발생했습니다.' });
-    }
-
-    if (!user) {
-      // 로그인 실패 기록
-      db.run('INSERT INTO login_attempts (email, ip_address, success) VALUES (?, ?, ?)',
-        [email, clientIP, false]);
-      return res.status(401).json({ error: '이메일 또는 비밀번호가 올바르지 않습니다.' });
-    }
-
-    // 비밀번호 검증
-    bcrypt.compare(password, user.password, (err, isMatch) => {
-      if (err) {
-        console.error('Password comparison error:', err);
-        return res.status(500).json({ error: '서버 오류가 발생했습니다.' });
-      }
-
-      if (!isMatch) {
-        // 로그인 실패 기록
-        db.run('INSERT INTO login_attempts (email, ip_address, success) VALUES (?, ?, ?)',
-          [email, clientIP, false]);
-        return res.status(401).json({ error: '이메일 또는 비밀번호가 올바르지 않습니다.' });
-      }
-
-      // 로그인 성공 기록
-      db.run('INSERT INTO login_attempts (email, ip_address, success) VALUES (?, ?, ?)',
-        [email, clientIP, true]);
-
-      // JWT 토큰 생성
-      const token = generateToken(user.id, user.email, user.role);
-      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24시간 후
-
-      // 세션 저장
-      db.run('INSERT INTO sessions (user_id, token, expires_at) VALUES (?, ?, ?)',
-        [user.id, token, expiresAt.toISOString()]);
-
-      res.json({
-        success: true,
-        token,
-        user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          company: user.company,
-          role: user.role
-        },
-        expiresAt: expiresAt.toISOString()
-      });
-    });
+// 로그인 - 비활성화 (프리뷰용)
+app.post('/api/auth/login', (req, res) => {
+  res.status(503).json({ 
+    error: '로그인 기능이 일시적으로 비활성화되었습니다. 프리뷰 모드에서는 데모 페이지를 이용해주세요.',
+    redirect: '/demo.html'
   });
 });
 
@@ -301,7 +233,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+  res.redirect('/demo.html');
 });
 
 app.get('/dashboard-advertiser', (req, res) => {
