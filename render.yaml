@@ -5,6 +5,9 @@ services:
     plan: free
     buildCommand: npm install
     startCommand: npm start
+    customDomains:
+      - advisorapi.io
+      - www.advisorapi.io
     envVars:
       - key: NODE_ENV
         value: production
