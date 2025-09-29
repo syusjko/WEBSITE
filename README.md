@@ -2,30 +2,29 @@
 
 ![AdvisoryAugust Logo](https://via.placeholder.com/200x60/3B82F6/FFFFFF?text=AdvisoryAugust)
 
-## 🚀 개요
+##  개요
 
 AdvisoryAugust는 문맥 기반 AI 광고 서비스 플랫폼입니다. 광고주와 퍼블리셔를 위한 전문적인 대시보드를 제공하며, 실시간 데이터 분석과 캠페인 관리를 지원합니다.
 
-## ✨ 주요 기능
+##  주요 기능
 
-### 🔐 인증 시스템
+###  인증 시스템
 - JWT 기반 보안 인증
 - 역할 기반 접근 제어 (Admin, Advertiser, Publisher)
 - Rate limiting을 통한 보안 강화
 - SQLite 데이터베이스 기반 사용자 관리
 
-### 📊 대시보드
+###  대시보드
 - **광고주 대시보드**: 캠페인 성과 분석, 노출수/클릭수 추적
 - **퍼블리셔 대시보드**: 수익 분석, 사이트 성과 모니터링
 - **관리자 대시보드**: 전체 시스템 현황 관리
 
-### 🎨 디자인 특징
+###  디자인 특징
 - 종이질감 배경과 Inter 폰트를 활용한 전문적인 UI
 - 반응형 디자인으로 모든 디바이스 지원
 - Glassmorphism 효과와 부드러운 애니메이션
 
-## 🛠️ 기술 스택
-
+##  기술 스택
 ### Backend
 - **Node.js** + **Express.js**
 - **SQLite3** 데이터베이스
@@ -44,7 +43,7 @@ AdvisoryAugust는 문맥 기반 AI 광고 서비스 플랫폼입니다. 광고�
 - **Docker Compose** 개발/프로덕션 환경
 - **Git** 버전 관리
 
-## 🚀 빠른 시작
+##  빠른 시작
 
 ### 1. 저장소 클론
 ```bash
@@ -67,7 +66,7 @@ npm run dev
 npm start
 ```
 
-## 🐳 Docker 사용
+##  Docker 사용
 
 ### Docker로 실행
 ```bash
@@ -95,7 +94,7 @@ docker-compose --profile dev up -d
 | Advertiser | advertiser@demo.com | advertiser123! | 광고주 계정 |
 | Publisher | publisher@demo.com | publisher123! | 퍼블리셔 계정 |
 
-## 📁 프로젝트 구조
+##  프로젝트 구조
 
 ```
 advisory-august/
@@ -124,7 +123,7 @@ advisory-august/
 ### 대시보드
 - `GET /api/dashboard/stats` - 대시보드 통계 데이터
 
-## 🛡️ 보안 기능
+##  보안 기능
 
 - **Rate Limiting**: 로그인 시도 제한 (15분에 5회)
 - **JWT 토큰**: 24시간 만료 시간
@@ -132,7 +131,7 @@ advisory-august/
 - **SQL Injection 방지**: 파라미터화된 쿼리
 - **CORS 설정**: 안전한 크로스 오리진 요청
 
-## 🌐 환경 변수
+##  환경 변수
 
 ```bash
 NODE_ENV=production          # 환경 설정
